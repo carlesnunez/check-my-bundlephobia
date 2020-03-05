@@ -1,13 +1,6 @@
 name: 'bundlephobia-checker'
 description: 'Check for new packages and their sizes'
-# inputs:
-#   who-to-greet:  # id of input
-#     description: 'Who to greet'
-#     required: true
-#     default: 'World'
-# outputs:
-#   time: # id of output
-#     description: 'The time we greeted you'
+on: [push, pull_request]
 runs:
   using: 'node12'
   main: 'index.js
