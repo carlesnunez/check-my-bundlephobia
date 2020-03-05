@@ -19,6 +19,7 @@
   "homepage": "https://github.com/carlesnunez/check-my-bundlephobia#readme",
   "dependencies": {
     "@actions/core": "^1.2.3",
-    "@actions/github": "^2.1.1"
+    "@actions/github": "^2.1.1",
+    "@octokit/rest": "^17.0.0"
   }
 }
