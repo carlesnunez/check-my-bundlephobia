@@ -1,6 +1,5 @@
 name: 'bundlephobia-checker'
 description: 'Check for new packages and their sizes'
-on: [push, pull_request]
 runs:
   using: 'node12'
   main: 'index.js
