@@ -1,4 +1,4 @@
-name: "test-action"
+name: "test-action "
 on: [pull_request, push]
 # test action works running from the graph  
   test:
