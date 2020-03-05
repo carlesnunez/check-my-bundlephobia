@@ -7,7 +7,7 @@ on:
     branches:
       - master
   # test action works running from the graph
-  test:
+  bundlecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: ./
