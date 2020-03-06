@@ -93,6 +93,8 @@ module.exports =
 
 console.log(process.env)
 
+console.log(exec(`git diff ${process.env.GITHUB_HEAD_REF} ${GITHUB_BASE_REF} package.json`));
+
 /***/ })
 
 /******/ });
