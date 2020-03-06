@@ -5,10 +5,10 @@ const octokit = new Octokit({
 const fetch = require('node-fetch');
 const { exec } = require('child_process');
 
-exec(`git diff refs/remotes/origin/${process.env.GITHUB_HEAD_REF} refs/remotes/origin/${process.env.GITHUB_BASE_REF} package.json`, (err, out, e) => {
+exec(`git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`, (err, out, e) => {
     const [_, diff] = out.split('dependencies": ');
     const packageList = diff.split("\n").filter(e => e.includes('+   '));
-
+console.log(out)
     const changedPackages = packageList.map(name => {
         const noSpaces = name.split(" ").join("").split("+").join();
         const noBreaks = noSpaces.split("\n").join("")
