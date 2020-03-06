@@ -5416,12 +5416,10 @@ exports.getMarkDownTable = (report) => {
 <details opened=false>
 <summary>Action settings</summary>
 
-**Treshold**: ${core.getInput('threshold')}
+**Treshold**: < ${core.getInput('threshold')} bytes
 **Strict mode**: ${core.getInput('strict') ? '✅ enabled' : '❌ disabled'}
 
 </details>
-Treshold: ${core.getInput('threshold')} 
-Strict mode: ${core.getInput('strict') ? 'enabled' : 'disabled'}
 
 | name | gzip | size | pass
 | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
@@ -5795,7 +5793,7 @@ exec(
     );
     if (
       process.env.GITHUB_REF.split("refs/pull/") &&
-      process.env.GITHUB_REPOSITORY.split("/")
+      process.env.GITHUB_REPOSITORY.split("/") && sizes.length
     ) {
     console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
       Promise.all(requests).then(() => {
