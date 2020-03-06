@@ -29,7 +29,7 @@ exec(
     );
     if (
       process.env.GITHUB_REF.split("refs/pull/") &&
-      process.env.GITHUB_REPOSITORY.split("/")
+      process.env.GITHUB_REPOSITORY.split("/") && sizes.length
     ) {
     console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
       Promise.all(requests).then(() => {
