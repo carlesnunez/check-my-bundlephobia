@@ -1,5 +1,9 @@
 name: "bundlephobia-checker"
 description: "Check for new packages and their sizes"
+inputs:
+  repo-token: # id of input
+    description: "Github token secret"
+    required: true
 runs:
   using: "node12"
   main: "dist/index.js"

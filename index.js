@@ -1,8 +1,10 @@
 const fetch = require('node-fetch');
 const { exec } = require('child_process');
 const { Octokit } = require("@octokit/rest");
+const core = require('@actions/core');
+
 const octokit = new Octokit({
-    auth: process.env.TOKEN
+    auth: process.env.TOKEN || core.getInput('repo-token')
 });
 
 function getMarkDownTable(report) {
