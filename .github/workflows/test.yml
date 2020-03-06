@@ -1,0 +1,17 @@
+name: "test-action "
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  # test action works running from the graph
+jobs:
+  bundlecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+      - uses: ./

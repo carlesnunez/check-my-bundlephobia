@@ -1,5 +1,5 @@
-name: 'bundlephobia-checker'
-description: 'Check for new packages and their sizes'
+name: "bundlephobia-checker"
+description: "Check for new packages and their sizes"
 runs:
-  using: 'node12'
-  main: 'index.js
+  using: "node12"
+  main: "dist/index.js"
