@@ -46,6 +46,6 @@
 console.log(process.env)
 
 const { exec } = require('child_process');
-exec(`git diff ${process.env.GITHUB_HEAD_REF} ${process.env.GITHUB_BASE_REF} package.json`, (err, out, e) => {
+exec(`git diff refs/remotes/origin/${process.env.GITHUB_HEAD_REF} refs/remotes/origin/${process.env.GITHUB_BASE_REF} package.json`, (err, out, e) => {
     console.log(err, out, e)
 });
