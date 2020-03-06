@@ -1,5 +1,6 @@
 name: "bundlephobia-checker"
 description: "Check for new packages and their sizes"
+icon: package
 inputs:
   repo-token: # id of input
     description: "Github token secret"
