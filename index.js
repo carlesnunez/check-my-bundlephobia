@@ -45,4 +45,5 @@
 
 console.log(process.env)
 
+const { exec } = require('child_process');
 console.log(exec(`git diff ${process.env.GITHUB_HEAD_REF} ${GITHUB_BASE_REF} package.json`));

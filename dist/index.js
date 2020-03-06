@@ -44,7 +44,7 @@ module.exports =
 /******/ ({
 
 /***/ 104:
-/***/ (function() {
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 // const { Octokit } = require("@octokit/rest");
 // const octokit = new Octokit({
@@ -93,7 +93,15 @@ module.exports =
 
 console.log(process.env)
 
+const { exec } = __webpack_require__(129);
 console.log(exec(`git diff ${process.env.GITHUB_HEAD_REF} ${GITHUB_BASE_REF} package.json`));
+
+/***/ }),
+
+/***/ 129:
+/***/ (function(module) {
+
+module.exports = require("child_process");
 
 /***/ })
 
