@@ -1,14 +1,15 @@
+const core = require("@actions/core");
+
 exports.getMarkDownTable = (report) => {
     let table = `
 ## 😱 Check my bundlephobia - New/Modified package report:
 
-| name | gzip | size |
-| ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| name | gzip | size | pass
+| ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
     report.forEach((packageInfo, index) => {
-        console.log(packageInfo)
       if (index === 0) {
-        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         |
+        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         | ${packageInfo.gzip > core.getInput('threshold') ? '❌' : '✅'}
 `;
       }
     });
