@@ -1,7 +1,3 @@
-const { Octokit } = require("@octokit/rest");
-const octokit = new Octokit({
-    auth: process.env.TOKEN
-});
 const fetch = require('node-fetch');
 const { exec } = require('child_process');
 
@@ -30,7 +26,7 @@ console.log(out)
               sizes.push({name: l.name, gzip: l.gzip, size: l.size})
           }
         })));
-
+console.log(changedPackages)
         Promise.all(requests).then((r) => {
             console.log(sizes)
         })
