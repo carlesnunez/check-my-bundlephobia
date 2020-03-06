@@ -34,7 +34,7 @@ module.exports =
 /******/ 	// the startup function
 /******/ 	function startup() {
 /******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(104);
+/******/ 		return __webpack_require__(676);
 /******/ 	};
 /******/
 /******/ 	// run startup
@@ -370,86 +370,6 @@ module.exports = windowsRelease;
 /***/ (function(module) {
 
 module.exports = require("os");
-
-/***/ }),
-
-/***/ 104:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
-
-const fetch = __webpack_require__(454);
-const { exec } = __webpack_require__(129);
-const { Octokit } = __webpack_require__(889);
-const core = __webpack_require__(470);
-
-const octokit = new Octokit({
-    auth: process.env.TOKEN || core.getInput('repo-token')
-});
-
-function getMarkDownTable(report) {
-    console.log(report)
-    let table = `
-## 😱 Check my bundlephobia - New/Modified package report:
-
-| name | gzip | size |
-| ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-`;
-    report.forEach((packageInfo, index) => {
-        console.log(packageInfo)
-      if (index === 0) {
-        table += `| ${packageInfo.name}  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         |
-`;
-      }
-    });
-
-    return table;
-  }
-
-exec(`git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`, (err, out, e) => {
-    const diff = out.split("\n");
-    const stuffAdded = diff.filter(e => e.includes('+   ')).map(e => e.split(" ").join("").split("+").join("").split(",").join(""));
-    const packageList = stuffAdded.filter(name => {
-        const initIsQuote = name[0] === "\"" || name[0] === "'"
-        const endIsQuote = name[name.length - 1] === "\"" || name[name.length - 1] === "'"
-        const colonIndex = name.indexOf(":")
-        const quoteBeforeColon = name[colonIndex-1] === "\"" || name[colonIndex] === "'"
-        const quoteAfterColon = name[colonIndex+1] === "\"" || name[colonIndex] === "'"
-
-        return initIsQuote && endIsQuote && colonIndex && quoteAfterColon && quoteBeforeColon
-    })
-    const changedPackages = packageList.map(name => {
-        const noSpaces = name.split(" ").join("").split("+").join();
-        const noBreaks = noSpaces.split("\n").join("")
-        const noQuotes = noBreaks.split("\"").join("").split("'").join("");
-        const noCommas = noQuotes.split(",").join("");
-        const noBrackets = noCommas.split("}").join("").split("{").join("");;
-        const versionSeparator = noBrackets.split(":");
-        const [pkname, version] = versionSeparator;
-        const versionParsed = isNaN(version[0]) ? version.substr(1) : version
-        return `${pkname}@${versionParsed}`
-    });
-
-    const sizes = []
-    const requests = changedPackages.map(
-        package => fetch(`https://bundlephobia.com/api/size?package=${package}`, {
-        headers: {'User-Agent': 'bundle-phobia-cli', 'X-Bundlephobia-User': 'bundle-phobia-cli'}
-      }).then(r => r.json().then(l => {
-          if(!l.error){
-              sizes.push({name: l.name, gzip: l.gzip, size: l.size})
-          }
-        })));
-
-        Promise.all(requests).then(() => {
-            const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split("/")
-            octokit.issues.createComment(
-                {
-                  owner,
-                  repo: repositoryName,
-                  issue_number: process.env.GITHUB_REF.split("refs/pull/")[1].split("/")[0],
-                  body: getMarkDownTable(sizes)
-                })
-
-        })
-});
 
 /***/ }),
 
@@ -5484,6 +5404,54 @@ module.exports.Collection = Hook.Collection
 
 /***/ }),
 
+/***/ 543:
+/***/ (function(__unusedmodule, exports) {
+
+exports.getMarkDownTable = (report) => {
+    let table = `
+## 😱 Check my bundlephobia - New/Modified package report:
+
+| name | gzip | size |
+| ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+`;
+    report.forEach((packageInfo, index) => {
+        console.log(packageInfo)
+      if (index === 0) {
+        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         |
+`;
+      }
+    });
+
+    return table;
+  }
+
+  exports.getPackageListFromDiff = (diff) => {
+    const stuffAdded = diff.split("\n").filter(e => e.includes('+   ')).map(e => e.split(" ").join("").split("+").join("").split(",").join(""));
+    const packages = stuffAdded.filter(name => {
+        const initIsQuote = name[0] === "\"" || name[0] === "'"
+        const endIsQuote = name[name.length - 1] === "\"" || name[name.length - 1] === "'"
+        const colonIndex = name.indexOf(":")
+        const quoteBeforeColon = name[colonIndex-1] === "\"" || name[colonIndex] === "'"
+        const quoteAfterColon = name[colonIndex+1] === "\"" || name[colonIndex] === "'"
+
+        return initIsQuote && endIsQuote && colonIndex && quoteAfterColon && quoteBeforeColon
+    });
+
+    return packages.map(name => {
+        const noSpaces = name.split(" ").join("").split("+").join();
+        const noBreaks = noSpaces.split("\n").join("")
+        const noQuotes = noBreaks.split("\"").join("").split("'").join("");
+        const noCommas = noQuotes.split(",").join("");
+        const noBrackets = noCommas.split("}").join("").split("{").join("");;
+        const versionSeparator = noBrackets.split(":");
+        const [pkname, version] = versionSeparator;
+        const versionParsed = isNaN(version[0]) ? version.substr(1) : version
+        return `${pkname}@${versionParsed}`
+    });
+  }
+
+/***/ }),
+
 /***/ 562:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -5779,6 +5747,62 @@ if (process.platform === 'linux') {
 /***/ (function(module) {
 
 module.exports = require("util");
+
+/***/ }),
+
+/***/ 676:
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+
+const fetch = __webpack_require__(454);
+const { exec } = __webpack_require__(129);
+const { Octokit } = __webpack_require__(889);
+const core = __webpack_require__(470);
+const utils = __webpack_require__(543);
+
+const octokit = new Octokit({
+  auth: process.env.TOKEN || core.getInput("repo-token")
+});
+
+exec(
+  `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
+  (err, out, e) => {
+    const packageList = utils.getPackageListFromDiff(out);
+    const sizes = [];
+    const requests = packageList.map(package =>
+      fetch(`https://bundlephobia.com/api/size?package=${package}`, {
+        headers: {
+          "User-Agent": "bundle-phobia-cli",
+          "X-Bundlephobia-User": "bundle-phobia-cli"
+        }
+      }).then(r =>
+        r.json().then(l => {
+          if (!l.error) {
+            sizes.push({ name: l.name, gzip: l.gzip, size: l.size, package });
+          }
+        })
+      )
+    );
+    if (
+      process.env.GITHUB_REF.split("refs/pull/") &&
+      process.env.GITHUB_REPOSITORY.split("/")
+    ) {
+      Promise.all(requests).then(() => {
+        const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split(
+          "/"
+        );
+        octokit.issues.createComment({
+          owner,
+          repo: repositoryName,
+          issue_number: process.env.GITHUB_REF.split("refs/pull/")[1].split(
+            "/"
+          )[0],
+          body: utils.getMarkDownTable(sizes)
+        });
+      });
+    }
+  }
+);
+
 
 /***/ }),
 

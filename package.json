@@ -4,7 +4,7 @@
   "description": "Github action to check for new added packages size on bundlephobia",
   "main": "index.js",
   "scripts": {
-    "package": "ncc build index.js -o dist"
+    "package": "ncc build src/index.js -o dist"
   },
   "repository": {
     "type": "git",
