@@ -1,5 +1,14 @@
 name: "bundlephobia-checker"
 description: "Check for new packages and their sizes"
+inputs:
+  repo-token: # id of input
+    description: "Github token secret"
+    required: true
+  strict: # id of input
+    description: "Should block pr if threshold not pass?"
+  threshold: # id of input
+    description: "Maximum size in bytes of a package gziped"
+    default: 600
 runs:
   using: "node12"
   main: "dist/index.js"
