@@ -5799,7 +5799,7 @@ exec(
             "/"
           )[0],
           body: utils.getMarkDownTable(sizes),
-          event: sizes.find(e => e.gzip > core.getInput('threshold')).length && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
+          event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
         });
       });
     }
