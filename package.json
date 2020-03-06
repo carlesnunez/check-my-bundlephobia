@@ -4,7 +4,7 @@
   "description": "Github action to check for new added packages size on bundlephobia",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "package": "ncc build index.js -o dist"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/carlesnunez/check-my-bundlephobia#readme",
   "dependencies": {
+    "@zeit/ncc": "^0.20.5",
     "@actions/core": "^1.2.3",
     "@actions/github": "^2.1.1",
-    "@octokit": "^17.0.0",
     "@octokit/rest": "^17.0.0",
     "node-fetch": "^2.6.0"
   }
