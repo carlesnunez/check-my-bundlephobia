@@ -5413,6 +5413,13 @@ exports.getMarkDownTable = (report) => {
     let table = `
 ## 😱 Check my bundlephobia - New/Modified package report:
 
+<details opened=false>
+<summary>Action settings</summary>
+
+**Treshold**: ${core.getInput('threshold')}
+**Strict mode**: ${core.getInput('strict') ? '✅ enabled' : '❌ disabled'}
+
+</details>
 Treshold: ${core.getInput('threshold')} 
 Strict mode: ${core.getInput('strict') ? 'enabled' : 'disabled'}
 
