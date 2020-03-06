@@ -9,7 +9,7 @@ exports.getMarkDownTable = (report) => {
 `;
     report.forEach((packageInfo, index) => {
       if (index === 0) {
-        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         | ${packageInfo.gzip > core.getInput('threshold') ? '❌' : '✅'}
+        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         | ${packageInfo.gzip > core.getInput('threshold') ? `❌ over threshold (${core.getInput('threshold')}) reduce ${Number(packageInfo.gzip) - Number(core.getInput('threshold'))}` : '✅'}
 `;
       }
     });
