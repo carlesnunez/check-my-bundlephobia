@@ -388,7 +388,7 @@ const octokit = new Octokit({
 function getMarkDownTable(report) {
     console.log(report)
     let table = `
-## 😱 Check my bundlephobia - New/Modifies packages report:
+## 😱 Check my bundlephobia - New/Modified package report:
 
 | name | gzip | size |
 | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
@@ -396,7 +396,7 @@ function getMarkDownTable(report) {
     report.forEach((packageInfo, index) => {
         console.log(packageInfo)
       if (index === 0) {
-        table += `| ${packageInfo.name}  | ${packageInfo.gzip}         | ${packageInfo.size}         |
+        table += `| ${packageInfo.name}  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         |
 `;
       }
     });
