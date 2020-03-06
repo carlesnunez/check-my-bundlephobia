@@ -10,10 +10,11 @@ octokit.pulls.get({
         format: "diff"
       }
   }).then((response) => {
-    const [_, diff] = response.data.split('+++ b/package.json');
-    const [__, ...packageList] = diff.split('+  ');
+    const [_, diff] = response.data.split('dependencies": ');
+    const packageList = diff.split("\n").filter(e => e.includes('+   '));
+
     const changedPackages = packageList.map(name => {
-        const noSpaces = name.split(" ").join("")
+        const noSpaces = name.split(" ").join("").split("+").join();
         const noBreaks = noSpaces.split("\n").join("")
         const noQuotes = noBreaks.split("\"").join("").split("'").join("");
         const noCommas = noQuotes.split(",").join("");
@@ -37,8 +38,4 @@ octokit.pulls.get({
         Promise.all(requests).then((r) => {
             console.log(sizes)
         })
-
-
-
-
   })
