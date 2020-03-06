@@ -94,7 +94,7 @@ module.exports =
 console.log(process.env)
 
 const { exec } = __webpack_require__(129);
-console.log(exec(`git diff ${process.env.GITHUB_HEAD_REF} ${GITHUB_BASE_REF} package.json`));
+console.log(exec(`git diff ${process.env.GITHUB_HEAD_REF} ${process.env.GITHUB_BASE_REF} package.json`));
 
 /***/ }),
 
