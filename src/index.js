@@ -31,7 +31,7 @@ exec(
       process.env.GITHUB_REF.split("refs/pull/") &&
       process.env.GITHUB_REPOSITORY.split("/")
     ) {
-    console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')).length && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
+    console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
       Promise.all(requests).then(() => {
         const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split(
           "/"
