@@ -5405,19 +5405,20 @@ module.exports.Collection = Hook.Collection
 /***/ }),
 
 /***/ 543:
-/***/ (function(__unusedmodule, exports) {
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+const core = __webpack_require__(470);
 
 exports.getMarkDownTable = (report) => {
     let table = `
 ## 😱 Check my bundlephobia - New/Modified package report:
 
-| name | gzip | size |
-| ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| name | gzip | size | pass
+| ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
     report.forEach((packageInfo, index) => {
-        console.log(packageInfo)
       if (index === 0) {
-        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         |
+        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${packageInfo.gzip} bytes         | ${packageInfo.size} bytes         | ${packageInfo.gzip > core.getInput('threshold') ? '❌' : '✅'}
 `;
       }
     });
@@ -5786,17 +5787,19 @@ exec(
       process.env.GITHUB_REF.split("refs/pull/") &&
       process.env.GITHUB_REPOSITORY.split("/")
     ) {
+    console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')).length && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
       Promise.all(requests).then(() => {
         const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split(
           "/"
         );
-        octokit.issues.createComment({
+        octokit.pulls.createReview({
           owner,
           repo: repositoryName,
-          issue_number: process.env.GITHUB_REF.split("refs/pull/")[1].split(
+          pull_number: process.env.GITHUB_REF.split("refs/pull/")[1].split(
             "/"
           )[0],
-          body: utils.getMarkDownTable(sizes)
+          body: utils.getMarkDownTable(sizes),
+          event: sizes.find(e => e.gzip > core.getInput('threshold')).length && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
         });
       });
     }
