@@ -1,7 +1,7 @@
-# [BETA] check-my-bundlephobia
+# Check my bundlephobia
 
 <p align="center">
-<img src="https://i.imgur.com/6oajmq1.png" />
+<img width="400" src="https://carles-nunez.s3.eu-west-1.amazonaws.com/assets/cmb-logo.svg" />
 </p>
 
 Check my bundlephobia is a github action that will check for your code changes on a PR and will left a comment with the different sizes.
