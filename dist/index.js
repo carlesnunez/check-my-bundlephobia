@@ -5794,7 +5794,7 @@ exec(
         })
       )
     );
-    console.log(process.env.GITHUB_REF);
+    console.log(process.env.GITHUB_REF, process.env.GITHUB_REPOSITORY);
     if (
       process.env.GITHUB_REF.split("refs/pull/") &&
       process.env.GITHUB_REPOSITORY.split("/") && sizes.length
