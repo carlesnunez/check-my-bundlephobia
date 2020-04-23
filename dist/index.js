@@ -5776,30 +5776,37 @@ exec(
   `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
   (err, out, e) => {
     const packageList = utils.getPackageListFromDiff(out);
-    const sizes = [];
-    const requests = packageList.map(package =>
-      fetch(`https://bundlephobia.com/api/size?package=${package}`, {
+    const requests = packageList.map(package => {
+      const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",
           "X-Bundlephobia-User": "bundle-phobia-cli"
         }
-      }).then(r =>
+      })
+      
+      return r.then(r =>
         r.json().then(l => {
           if (!l.error) {
-            sizes.push({ name: l.name, gzip: l.gzip, size: l.size, package });
+            return { name: l.name, gzip: l.gzip, size: l.size, package };
+          } else {
+            console.log('ERROR', error)
           }
         })
       )
-    );
-    if (
-      process.env.GITHUB_REF.split("refs/pull/") &&
-      process.env.GITHUB_REPOSITORY.split("/") && sizes.length
-    ) {
-    console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
-      Promise.all(requests).then(() => {
+      
+      r.catch(e => console.log('->',e))
+    }
+    )
+      
+      Promise.all(requests).then((sizes) => {
+        if (
+          process.env.GITHUB_REF.split("refs/pull/") &&
+          process.env.GITHUB_REPOSITORY.split("/") && sizes.length
+        ) {
         const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split(
           "/"
         );
+
         octokit.pulls.createReview({
           owner,
           repo: repositoryName,
@@ -5809,8 +5816,8 @@ exec(
           body: utils.getMarkDownTable(sizes),
           event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
         });
+      }
       });
-    }
   }
 );
 
