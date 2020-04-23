@@ -21,9 +21,10 @@ exec(
           "X-Bundlephobia-User": "bundle-phobia-cli"
         }
       })
-      r.then(e => console.log('ok', e.json()));
+      
       r.then(r =>
         r.json().then(l => {
+          console.log('OKKK', l)
           if (!l.error) {
             sizes.push({ name: l.name, gzip: l.gzip, size: l.size, package });
           } else {
@@ -31,8 +32,8 @@ exec(
           }
         })
       )
+      
       r.catch(e => console.log('->',e))
-      return r;
     }
     )
       
