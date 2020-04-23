@@ -27,6 +27,7 @@ exec(
             return { name: l.name, gzip: l.gzip, size: l.size, package };
           } else {
             console.log('ERROR', error)
+            return {}
           }
         })
       )
