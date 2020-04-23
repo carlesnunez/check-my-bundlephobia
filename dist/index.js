@@ -5785,7 +5785,7 @@ exec(
           "X-Bundlephobia-User": "bundle-phobia-cli"
         }
       })
-      
+      r.then(e => console.log('ok', e));
       r.then(r =>
         r.json().then(l => {
           if (!l.error) {
