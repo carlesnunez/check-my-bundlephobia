@@ -13,7 +13,6 @@ exec(
   (err, out, e) => {
     const packageList = utils.getPackageListFromDiff(out);
     console.log('---------------->',packageList);
-    const sizes = [];
     const requests = packageList.map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
@@ -25,7 +24,7 @@ exec(
       r.then(r =>
         r.json().then(l => {
           if (!l.error) {
-            sizes.push({ name: l.name, gzip: l.gzip, size: l.size, package });
+            return { name: l.name, gzip: l.gzip, size: l.size, package };
           } else {
             console.log('ERROR', error)
           }
@@ -39,7 +38,7 @@ exec(
     console.log(process.env.GITHUB_REF, process.env.GITHUB_REPOSITORY, );
 
     console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
-      Promise.all(requests).then(() => {
+      Promise.all(requests).then((sizes) => {
         console.log('sizes', sizes)
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
