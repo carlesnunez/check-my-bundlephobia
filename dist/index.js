@@ -5788,7 +5788,6 @@ exec(
       
       r.then(r =>
         r.json().then(l => {
-          console.log('OKKK', l)
           if (!l.error) {
             sizes.push({ name: l.name, gzip: l.gzip, size: l.size, package });
           } else {
@@ -5801,13 +5800,14 @@ exec(
     }
     )
       
-    console.log(process.env.GITHUB_REF, process.env.GITHUB_REPOSITORY);
-    if (
-      process.env.GITHUB_REF.split("refs/pull/") &&
-      process.env.GITHUB_REPOSITORY.split("/") && sizes.length
-    ) {
+    console.log(process.env.GITHUB_REF, process.env.GITHUB_REPOSITORY, );
+
     console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
       Promise.all(requests).then(() => {
+        if (
+          process.env.GITHUB_REF.split("refs/pull/") &&
+          process.env.GITHUB_REPOSITORY.split("/") && sizes.length
+        ) {
         console.log('LALAALALLA');
         const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split(
           "/"
@@ -5822,8 +5822,9 @@ exec(
           body: utils.getMarkDownTable(sizes),
           event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
         });
+
+      }
       });
-    }
   }
 );
 
