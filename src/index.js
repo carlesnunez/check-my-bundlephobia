@@ -40,6 +40,16 @@ exec(
         const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split(
           "/"
         );
+
+        console.log({
+          owner,
+          repo: repositoryName,
+          pull_number: process.env.GITHUB_REF.split("refs/pull/")[1].split(
+            "/"
+          )[0],
+          body: utils.getMarkDownTable(sizes),
+          event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
+        })
         octokit.pulls.createReview({
           owner,
           repo: repositoryName,
