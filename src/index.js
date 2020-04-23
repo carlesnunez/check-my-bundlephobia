@@ -28,7 +28,7 @@ exec(
             console.log('ERROR', error)
           }
         })
-      ).catch(e => console.log(e))
+      ).catch(e => console.log('->',e))
     )
     console.log(process.env.GITHUB_REF, process.env.GITHUB_REPOSITORY);
     if (
