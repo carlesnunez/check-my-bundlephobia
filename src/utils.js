@@ -17,7 +17,7 @@ exports.getMarkDownTable = (report) => {
 `;
     report.forEach((packageInfo, index) => {
       if (index === 0) {
-        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${parseInt(packageInfo.gzip) / 1024}kB         | ${packageInfo.size / 1024}kB         | ${packageInfo.gzip > core.getInput('threshold') ? '❌' : '✅'}
+        table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${(parseInt(packageInfo.gzip) / 1024).toFixed(1)}kB         | ${(packageInfo.size / 1024).toFixed(1)}kB         | ${packageInfo.gzip > core.getInput('threshold') ? '❌' : '✅'}
 `;
       }
     });
