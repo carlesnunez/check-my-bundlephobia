@@ -12,6 +12,7 @@ exec(
   `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
   (err, out, e) => {
     const packageList = utils.getPackageListFromDiff(out);
+    console.log(out);
     const sizes = [];
     const requests = packageList.map(package =>
       fetch(`https://bundlephobia.com/api/size?package=${package}`, {
