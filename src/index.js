@@ -12,7 +12,6 @@ exec(
   `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
   (err, out, e) => {
     const packageList = utils.getPackageListFromDiff(out);
-    console.log('---------------->',packageList);
     const requests = packageList.map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
@@ -27,7 +26,6 @@ exec(
             return { name: l.name, gzip: l.gzip, size: l.size, package };
           } else {
             console.log('ERROR', error)
-            return {}
           }
         })
       )
@@ -36,15 +34,11 @@ exec(
     }
     )
       
-    console.log(process.env.GITHUB_REF, process.env.GITHUB_REPOSITORY, );
-
       Promise.all(requests).then((sizes) => {
-        console.log('sizes', sizes)
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
           process.env.GITHUB_REPOSITORY.split("/") && sizes.length
         ) {
-        console.log('LALAALALLA');
         const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split(
           "/"
         );
@@ -58,7 +52,6 @@ exec(
           body: utils.getMarkDownTable(sizes),
           event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
         });
-
       }
       });
   }
