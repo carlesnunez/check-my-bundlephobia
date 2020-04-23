@@ -24,6 +24,8 @@ exec(
         r.json().then(l => {
           if (!l.error) {
             sizes.push({ name: l.name, gzip: l.gzip, size: l.size, package });
+          } else {
+            console.log('ERROR', error)
           }
         })
       )
