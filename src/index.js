@@ -37,7 +37,6 @@ exec(
       
     console.log(process.env.GITHUB_REF, process.env.GITHUB_REPOSITORY, );
 
-    console.log(core.getInput('threshold'), core.getInput('strict'), sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT')
       Promise.all(requests).then((sizes) => {
         console.log('sizes', sizes)
         if (
