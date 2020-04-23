@@ -14,13 +14,15 @@ exec(
     const packageList = utils.getPackageListFromDiff(out);
     console.log('---------------->',packageList);
     const sizes = [];
-    const requests = packageList.map(package =>
-      fetch(`https://bundlephobia.com/api/size?package=${package}`, {
+    const requests = packageList.map(package => {
+      const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",
           "X-Bundlephobia-User": "bundle-phobia-cli"
         }
-      }).then(r =>
+      })
+      
+      r.then(r =>
         r.json().then(l => {
           if (!l.error) {
             sizes.push({ name: l.name, gzip: l.gzip, size: l.size, package });
@@ -28,8 +30,12 @@ exec(
             console.log('ERROR', error)
           }
         })
-      ).catch(e => console.log('->',e))
+      )
+      r.catch(e => console.log('->',e))
+      return r;
+    }
     )
+      
     console.log(process.env.GITHUB_REF, process.env.GITHUB_REPOSITORY);
     if (
       process.env.GITHUB_REF.split("refs/pull/") &&
