@@ -21,7 +21,7 @@ exec(
         }
       })
       
-      r.then(r =>
+      return r.then(r =>
         r.json().then(l => {
           if (!l.error) {
             return { name: l.name, gzip: l.gzip, size: l.size, package };
