@@ -20,6 +20,7 @@
   "dependencies": {
     "@zeit/ncc": "^0.20.5",
     "@actions/core": "^1.2.3",
+    "rimraf": "3.0.0",
     "@actions/github": "^2.1.1",
     "@octokit/rest": "^17.0.0",
     "node-fetch": "^2.6.0"
