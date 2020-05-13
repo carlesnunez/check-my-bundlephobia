@@ -49,6 +49,8 @@ exports.getMarkDownTable = (report) => {
       return initIsQuote && endIsQuote && colonIndex && quoteAfterColon && quoteBeforeColon
   });
 
+  console.log(packagesRemoved)
+
     return {
       packagesAdded: packagesAdded.map(name => {
         const noSpaces = name.split(" ").join("").split("+").join();
