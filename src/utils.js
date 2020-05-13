@@ -37,7 +37,7 @@ table += sizeRemoved ? `| Old | [${sizeRemoved.package}](https://bundlephobia.co
 const gzipedDiff = sizeRemoved ? (((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))).toFixed(1) : 0; 
 const sizeDiff = sizeRemoved ? (((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))).toFixed(1) : 0; 
 
-table += sizeRemoved ? `| | | ${Math.sign(gzipedDiff) ? '+' : gzipedDiff === '0.0' ? '=' : ''}${gzipedDiff}kB         | ${Math.sign(sizeDiff) ? '+' : sizeDiff === '0.0' ? '=' : ''}${sizeDiff}kB         | ` : ''
+table += sizeRemoved ? `| | | ${Math.sign(gzipedDiff) ? '+' : gzipedDiff === '0.0' ? '=' : ''}${gzipedDiff === '0.0' ? gzipedDiff + 'kB' : ''}         | ${Math.sign(sizeDiff) ? '+' : ''}${sizeDiff === '0.0' ? sizeDiff + 'kB' : ''}        | ` : ''
 
   });
 
