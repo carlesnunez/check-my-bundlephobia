@@ -71,7 +71,7 @@ exec(
             "/"
           )[0],
           body: utils.getMarkDownTable(sizesAdded, sizesRemoved),
-          event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
+          event: sizesAdded.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
         });
       }
       });
