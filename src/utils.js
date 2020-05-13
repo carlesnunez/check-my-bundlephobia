@@ -49,7 +49,7 @@ exports.getMarkDownTable = (report) => {
       return initIsQuote && endIsQuote && colonIndex && quoteAfterColon && quoteBeforeColon
   });
 
-  console.log(packagesRemoved)
+  console.log(diff)
 
     return {
       packagesAdded: packagesAdded.map(name => {
