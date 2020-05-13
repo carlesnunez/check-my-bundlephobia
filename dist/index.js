@@ -5421,7 +5421,7 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
 
 </details>
 
-| -- | name | gzip | size | pass
+|  | name | gzip | size | pass
 | -- | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
   sizesAdded.forEach((packageInfo, index) => {
@@ -5443,6 +5443,8 @@ table += sizeRemoved ? `| Old | [${sizeRemoved.package}](https://bundlephobia.co
   packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
 }
 ` : ''
+
+table += sizeRemoved ? `| | | ${((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))}kB         | ${((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))}kB         | ` : ''
 
   });
 
