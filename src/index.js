@@ -55,7 +55,7 @@ exec(
     console.log(requestsRemoved);
     console.log(packagesAdded);
       Promise.all([Promise.all(requestsAdded), Promise.all(requestsRemoved)]).then(([sizesAdded, sizesRemoved]) => {
-        console.log('sizes', sizes)
+        console.log('sizes', sizesAdded, sizesRemoved)
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
           process.env.GITHUB_REPOSITORY.split("/") && sizes.length
