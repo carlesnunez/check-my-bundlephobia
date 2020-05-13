@@ -5409,7 +5409,7 @@ module.exports.Collection = Hook.Collection
 
 const core = __webpack_require__(470);
 
-exports.getMarkDownTable = (report) => {
+exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
   let table = `
 ## 😱 Check my bundlephobia - New/Modified package report:
 
@@ -5424,7 +5424,8 @@ exports.getMarkDownTable = (report) => {
 | name | gzip | size | pass
 | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
-  report.forEach((packageInfo, index) => {
+  sizesAdded.forEach((packageInfo, index) => {
+    const sizeRemoved = sizesRemoved.find(({name}) => name === packageInfo.name);
       table += `| [${packageInfo.package}](https://bundlephobia.com/result?p=${
         packageInfo.package
       })  | ${(parseInt(packageInfo.gzip) / 1024).toFixed(1)}kB         | ${(
@@ -5433,6 +5434,16 @@ exports.getMarkDownTable = (report) => {
         packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
       }
 `;
+
+table += sizeRemoved ? `| [${sizeRemoved.package}](https://bundlephobia.com/result?p=${
+  sizeRemoved.package
+})  | ${(parseInt(sizeRemoved.gzip) / 1024).toFixed(1)}kB         | ${(
+  sizeRemoved.size / 1024
+).toFixed(1)}kB         | ${
+  packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
+}
+` : ''
+
   });
 
   return table;
@@ -5870,7 +5881,7 @@ exec(
     });
     console.log(requestsRemoved);
     console.log(packagesAdded);
-      Promise.all([Promise.all(requestsAdded), Promise.all(requestsRemoved)]).then((sizes) => {
+      Promise.all([Promise.all(requestsAdded), Promise.all(requestsRemoved)]).then(([sizesAdded, sizesRemoved]) => {
         console.log('sizes', sizes)
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
@@ -5886,7 +5897,7 @@ exec(
           pull_number: process.env.GITHUB_REF.split("refs/pull/")[1].split(
             "/"
           )[0],
-          body: utils.getMarkDownTable(sizes),
+          body: utils.getMarkDownTable(sizesAdded, sizesRemoved),
           event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
         });
       }

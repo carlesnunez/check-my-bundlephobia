@@ -1,6 +1,6 @@
 const core = require("@actions/core");
 
-exports.getMarkDownTable = (report) => {
+exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
   let table = `
 ## 😱 Check my bundlephobia - New/Modified package report:
 
@@ -15,7 +15,8 @@ exports.getMarkDownTable = (report) => {
 | name | gzip | size | pass
 | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
-  report.forEach((packageInfo, index) => {
+  sizesAdded.forEach((packageInfo, index) => {
+    const sizeRemoved = sizesRemoved.find(({name}) => name === packageInfo.name);
       table += `| [${packageInfo.package}](https://bundlephobia.com/result?p=${
         packageInfo.package
       })  | ${(parseInt(packageInfo.gzip) / 1024).toFixed(1)}kB         | ${(
@@ -24,6 +25,16 @@ exports.getMarkDownTable = (report) => {
         packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
       }
 `;
+
+table += sizeRemoved ? `| [${sizeRemoved.package}](https://bundlephobia.com/result?p=${
+  sizeRemoved.package
+})  | ${(parseInt(sizeRemoved.gzip) / 1024).toFixed(1)}kB         | ${(
+  sizeRemoved.size / 1024
+).toFixed(1)}kB         | ${
+  packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
+}
+` : ''
+
   });
 
   return table;

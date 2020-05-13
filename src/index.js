@@ -54,7 +54,7 @@ exec(
     });
     console.log(requestsRemoved);
     console.log(packagesAdded);
-      Promise.all([Promise.all(requestsAdded), Promise.all(requestsRemoved)]).then((sizes) => {
+      Promise.all([Promise.all(requestsAdded), Promise.all(requestsRemoved)]).then(([sizesAdded, sizesRemoved]) => {
         console.log('sizes', sizes)
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
@@ -70,7 +70,7 @@ exec(
           pull_number: process.env.GITHUB_REF.split("refs/pull/")[1].split(
             "/"
           )[0],
-          body: utils.getMarkDownTable(sizes),
+          body: utils.getMarkDownTable(sizesAdded, sizesRemoved),
           event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
         });
       }
