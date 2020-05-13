@@ -5425,7 +5425,6 @@ exports.getMarkDownTable = (report) => {
 | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
   report.forEach((packageInfo, index) => {
-    if (index === 0) {
       table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${
         packageInfo.package
       })  | ${(parseInt(packageInfo.gzip) / 1024).toFixed(1)}kB         | ${(
@@ -5434,7 +5433,6 @@ exports.getMarkDownTable = (report) => {
         packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
       }
 `;
-    }
   });
 
   return table;
