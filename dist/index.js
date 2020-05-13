@@ -5885,7 +5885,7 @@ exec(
         console.log('sizes', sizesAdded, sizesRemoved)
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
-          process.env.GITHUB_REPOSITORY.split("/") && sizes.length
+          process.env.GITHUB_REPOSITORY.split("/") && sizesAdded.length
         ) {
         const [owner, repositoryName] = process.env.GITHUB_REPOSITORY.split(
           "/"
