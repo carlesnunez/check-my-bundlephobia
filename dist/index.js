@@ -5421,12 +5421,12 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
 
 </details>
 
-| name | gzip | size | pass
-| ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
+| -- | name | gzip | size | pass
+| -- | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
   sizesAdded.forEach((packageInfo, index) => {
     const sizeRemoved = sizesRemoved.find(({name}) => name === packageInfo.name);
-      table += `| [${packageInfo.package}](https://bundlephobia.com/result?p=${
+      table += `| ${sizeRemoved ? 'New' : ''} | [${packageInfo.package}](https://bundlephobia.com/result?p=${
         packageInfo.package
       })  | ${(parseInt(packageInfo.gzip) / 1024).toFixed(1)}kB         | ${(
         packageInfo.size / 1024
@@ -5435,7 +5435,7 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
       }
 `;
 
-table += sizeRemoved ? `| [${sizeRemoved.package}](https://bundlephobia.com/result?p=${
+table += sizeRemoved ? `| Old | [${sizeRemoved.package}](https://bundlephobia.com/result?p=${
   sizeRemoved.package
 })  | ${(parseInt(sizeRemoved.gzip) / 1024).toFixed(1)}kB         | ${(
   sizeRemoved.size / 1024
