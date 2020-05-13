@@ -32,7 +32,7 @@ exec(
       
       r.catch(e => console.log('->',e))
     });
-    const requestsRemoved = packagesRemoved.filter(name => packagesAdded.find(n => n.includes(name))).map(package => {
+    const requestsRemoved = packagesRemoved.filter(name => packagesAdded.find(n => n.includes(name.split("@")[0]))).map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",
