@@ -16,7 +16,7 @@ exports.getMarkDownTable = (report) => {
 | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
   report.forEach((packageInfo, index) => {
-      table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${
+      table += `| [${packageInfo.package}](https://bundlephobia.com/result?p=${
         packageInfo.package
       })  | ${(parseInt(packageInfo.gzip) / 1024).toFixed(1)}kB         | ${(
         packageInfo.size / 1024
