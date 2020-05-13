@@ -32,7 +32,6 @@ exec(
       
       r.catch(e => console.log('->',e))
     });
-console.log(packagesRemoved)
     const requestsRemoved = packagesRemoved.filter(name => packagesAdded.find(n => n.includes(name))).map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
@@ -54,7 +53,7 @@ console.log(packagesRemoved)
       r.catch(e => console.log('->',e))
     });
       Promise.all(requestsRemoved).then(a => console.log(a))
-      Promise.all([...requestsAdded]).then((sizes) => {
+      Promise.all([...requestsAdded, ...requestsRemoved]).then((sizes) => {
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
           process.env.GITHUB_REPOSITORY.split("/") && sizes.length
