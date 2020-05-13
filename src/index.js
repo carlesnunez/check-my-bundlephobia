@@ -32,7 +32,7 @@ exec(
       
       r.catch(e => console.log('->',e))
     });
-
+console.log(packagesRemoved)
     const requestsRemoved = packagesRemoved.filter(name => packagesAdded.find(n => n.includes(name))).map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
