@@ -5843,7 +5843,7 @@ exec(
       
       r.catch(e => console.log('->',e))
     });
-      console.log(requestsRemoved.then(a => console.log(a)))
+      Promise.all(requestsRemoved).then(a => console.log(a))
       Promise.all([...requestsAdded]).then((sizes) => {
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
