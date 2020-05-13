@@ -52,7 +52,7 @@ exec(
       
       r.catch(e => console.log('->',e))
     });
-    console.log(packagesRemoved);
+    console.log(requestsRemoved);
     console.log(packagesAdded);
       Promise.all(requestsRemoved).then(a => console.log(a))
       Promise.all([...requestsAdded, ...requestsRemoved]).then((sizes) => {
