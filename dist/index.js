@@ -5444,7 +5444,7 @@ table += sizeRemoved ? `| Old | [${sizeRemoved.package}](https://bundlephobia.co
 }
 ` : ''
 
-table += sizeRemoved ? `| | | ${((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))}kB         | ${((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))}kB         | ` : ''
+table += sizeRemoved ? `| | | ${(((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))).toFixed(1)}kB         | ${(((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))).toFixed(1)}kB         | ` : ''
 
   });
 
