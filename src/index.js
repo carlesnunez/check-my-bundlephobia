@@ -11,8 +11,8 @@ const octokit = new Octokit({
 exec(
   `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
   (err, out, e) => {
-    const packageList = utils.getPackageListFromDiff(out);
-    const requests = packageList.map(package => {
+    const {packagesAdded, packagesRemoved} = utils.getPackageListFromDiff(out);
+    const requestsAdded = packagesAdded.map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",
@@ -31,10 +31,30 @@ exec(
       )
       
       r.catch(e => console.log('->',e))
-    }
-    )
+    });
+
+    const requestsRemoved = packagesRemoved.filter(name => packagesAdded.find(n => n.includes(name))).map(package => {
+      const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
+        headers: {
+          "User-Agent": "bundle-phobia-cli",
+          "X-Bundlephobia-User": "bundle-phobia-cli"
+        }
+      })
       
-      Promise.all(requests).then((sizes) => {
+      return r.then(r =>
+        r.json().then(l => {
+          if (!l.error) {
+            return { name: l.name, gzip: l.gzip, size: l.size, package };
+          } else {
+            console.log('ERROR', error)
+          }
+        })
+      )
+      
+      r.catch(e => console.log('->',e))
+    });
+      console.log(requestsRemoved.then(a => console.log(a)))
+      Promise.all([...requestsAdded]).then((sizes) => {
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
           process.env.GITHUB_REPOSITORY.split("/") && sizes.length
