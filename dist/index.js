@@ -5436,7 +5436,8 @@ exports.getMarkDownTable = (report) => {
 
   exports.getPackageListFromDiff = (diff) => {
     const stuffAdded = diff.split("\n").filter(e => e.includes('+   ')).map(e => e.split(" ").join("").split("+").join("").split(",").join(""));
-    const packages = stuffAdded.filter(name => {
+    const stuffRemoved = diff.split("\n").filter(e => e.includes('-   ')).map(e => e.split(" ").join("").split("+").join("").split(",").join(""));
+    const packagesAdded = stuffAdded.filter(name => {
         const initIsQuote = name[0] === "\"" || name[0] === "'"
         const endIsQuote = name[name.length - 1] === "\"" || name[name.length - 1] === "'"
         const colonIndex = name.indexOf(":")
@@ -5446,7 +5447,19 @@ exports.getMarkDownTable = (report) => {
         return initIsQuote && endIsQuote && colonIndex && quoteAfterColon && quoteBeforeColon
     });
 
-    return packages.map(name => {
+
+    const packagesRemoved = stuffRemoved.filter(name => {
+      const initIsQuote = name[0] === "\"" || name[0] === "'"
+      const endIsQuote = name[name.length - 1] === "\"" || name[name.length - 1] === "'"
+      const colonIndex = name.indexOf(":")
+      const quoteBeforeColon = name[colonIndex-1] === "\"" || name[colonIndex] === "'"
+      const quoteAfterColon = name[colonIndex+1] === "\"" || name[colonIndex] === "'"
+
+      return initIsQuote && endIsQuote && colonIndex && quoteAfterColon && quoteBeforeColon
+  });
+
+    return {
+      packagesAdded: packagesAdded.map(name => {
         const noSpaces = name.split(" ").join("").split("+").join();
         const noBreaks = noSpaces.split("\n").join("")
         const noQuotes = noBreaks.split("\"").join("").split("'").join("");
@@ -5456,7 +5469,20 @@ exports.getMarkDownTable = (report) => {
         const [pkname, version] = versionSeparator;
         const versionParsed = isNaN(version[0]) ? version.substr(1) : version
         return `${pkname}@${versionParsed}`
-    });
+    }),
+    packagesRemoved: packagesRemoved.map(name => {
+      const noSpaces = name.split(" ").join("").split("+").join();
+      const noBreaks = noSpaces.split("\n").join("")
+      const noQuotes = noBreaks.split("\"").join("").split("'").join("");
+      const noCommas = noQuotes.split(",").join("");
+      const noBrackets = noCommas.split("}").join("").split("{").join("");;
+      const versionSeparator = noBrackets.split(":");
+      const [pkname, version] = versionSeparator;
+      const versionParsed = isNaN(version[0]) ? version.substr(1) : version
+      return `${pkname}@${versionParsed}`
+  })
+
+  }
   }
 
 /***/ }),
@@ -5775,8 +5801,8 @@ const octokit = new Octokit({
 exec(
   `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
   (err, out, e) => {
-    const packageList = utils.getPackageListFromDiff(out);
-    const requests = packageList.map(package => {
+    const {packagesAdded, packagesRemoved} = utils.getPackageListFromDiff(out);
+    const requestsAdded = packagesAdded.map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",
@@ -5795,10 +5821,30 @@ exec(
       )
       
       r.catch(e => console.log('->',e))
-    }
-    )
+    });
+
+    const requestsRemoved = packagesRemoved.filter(name => packagesAdded.find(n => n.includes(name))).map(package => {
+      const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
+        headers: {
+          "User-Agent": "bundle-phobia-cli",
+          "X-Bundlephobia-User": "bundle-phobia-cli"
+        }
+      })
       
-      Promise.all(requests).then((sizes) => {
+      return r.then(r =>
+        r.json().then(l => {
+          if (!l.error) {
+            return { name: l.name, gzip: l.gzip, size: l.size, package };
+          } else {
+            console.log('ERROR', error)
+          }
+        })
+      )
+      
+      r.catch(e => console.log('->',e))
+    });
+      console.log(requestsRemoved.then(a => console.log(a)))
+      Promise.all([...requestsAdded]).then((sizes) => {
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
           process.env.GITHUB_REPOSITORY.split("/") && sizes.length
