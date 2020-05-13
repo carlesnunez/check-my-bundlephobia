@@ -5836,7 +5836,7 @@ exec(
           if (!l.error) {
             return { name: l.name, gzip: l.gzip, size: l.size, package };
           } else {
-            console.log('ERROR', error)
+            console.log('ERROR', l.error)
           }
         })
       )
