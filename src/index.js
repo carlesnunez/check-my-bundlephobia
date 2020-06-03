@@ -10,9 +10,14 @@ const octokit = new Octokit({
 
 exec(
   `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
-  (err, out, e) => {
+  async (err, out, e) => {
     const packageList = utils.getPackageListFromDiff(out);
-    const requests = packageList.map(package => {
+    const devDependenciesList = await utils.getDevDependencies();
+    const requests = packageList.filter(p => {
+      const packageName = p.split('@')[0];
+      return !(core.getInput('ignore-dev-dependencies') === 'true' && devDependenciesList.includes(packageName));
+    })
+    .map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",

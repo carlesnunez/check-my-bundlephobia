@@ -1,7 +1,7 @@
 name: "bundlephobia-checker"
 description: "Check for new packages and their sizes"
 branding:
-  icon: 'package'  
+  icon: 'package'
   color: 'black'
 inputs:
   repo-token: # id of input
@@ -12,6 +12,9 @@ inputs:
   threshold: # id of input
     description: "Maximum size in bytes of a package gziped"
     default: 600
+  ignore-dev-dependencies:
+    description: "Ignore devDependencies so that to not be checked"
+    default: false
 runs:
   using: "node12"
   main: "dist/index.js"

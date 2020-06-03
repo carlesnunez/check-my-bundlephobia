@@ -1,4 +1,5 @@
 const core = require("@actions/core");
+const fetch = require("node-fetch");
 
 exports.getMarkDownTable = (report) => {
     let table = `
@@ -49,3 +50,9 @@ exports.getMarkDownTable = (report) => {
         return `${pkname}@${versionParsed}`
     });
   }
+
+exports.getDevDependencies = async () => {
+  const result = await fetch(`https://raw.githubusercontent.com/${process.env.GITHUB_REPOSITORY}/${process.env.GITHUB_HEAD_REF}/package.json`);
+  const data = await result.json();
+  return data.devDependencies ? Object.keys(data.devDependencies) : [];
+}
