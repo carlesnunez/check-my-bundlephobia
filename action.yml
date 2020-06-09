@@ -1,4 +1,4 @@
-name: "bundlephobia-checker"
+name: "bundlephobia-pr-review"
 description: "Check for new packages and their sizes"
 branding:
   icon: 'package'  

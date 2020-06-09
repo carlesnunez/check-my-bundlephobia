@@ -5417,7 +5417,7 @@ exports.getMarkDownTable = (report) => {
 <summary>Action settings</summary>
 
 **Treshold**: < ${core.getInput('threshold')} bytes
-**Strict mode**: ${core.getInput('strict') ? '✅ enabled' : '❌ disabled'}
+**Strict mode**: ${core.getInput('strict') === 'true' ? '✅ enabled' : '❌ disabled'}
 
 </details>
 
@@ -5814,7 +5814,7 @@ exec(
             "/"
           )[0],
           body: utils.getMarkDownTable(sizes),
-          event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') ? 'REQUEST_CHANGES' : 'COMMENT'
+          event: sizes.find(e => e.gzip > core.getInput('threshold')) && core.getInput('strict') === 'true' ? 'REQUEST_CHANGES' : 'COMMENT'
         });
       }
       });
