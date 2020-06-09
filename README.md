@@ -1,11 +1,6 @@
-# Check my bundlephobia
+# bundlephobia-pr-review
 
-<p align="center">
-<img width="400" src="https://carles-nunez.s3.eu-west-1.amazonaws.com/assets/cmb-logo.svg" />
-</p>
-
-Check my bundlephobia is a github action that will check for your code changes on a PR and will left a comment with the different sizes.
-
+Bundlephobia PR review is a github action that will check for your code changes on a PR and will left a comment with the different sizes.
 
 ## How to use it
 
@@ -38,3 +33,7 @@ jobs:
 | strict     | If true will reject the PR if threshold is exceded | false    | Boolean | false   |
 | threshold  | Max package size in bytes                          | false    | String  | 500     |
 
+
+## Credits
+
+This is a fork of https://github.com/carlesnunez/check-my-bundlephobia, with fixes for disabling strict mode.
