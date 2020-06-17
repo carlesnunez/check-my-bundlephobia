@@ -26,21 +26,25 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
         packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
       }
 `;
+  if(sizeRemoved) {
+    table += sizeRemoved ? `| Old | [${sizeRemoved.package}](https://bundlephobia.com/result?p=${
+      sizeRemoved.package
+    })  | ${(parseInt(sizeRemoved.gzip) / 1024).toFixed(1)}kB         | ${(
+      sizeRemoved.size / 1024
+    ).toFixed(1)}kB         | ${
+      packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
+    }
+    ` : ''
+    const gzipedDiff = sizeRemoved ? (((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))).toFixed(1) : 0; 
+    const sizeDiff = sizeRemoved ? (((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))).toFixed(1) : 0; 
 
-table += sizeRemoved ? `| Old | [${sizeRemoved.package}](https://bundlephobia.com/result?p=${
-  sizeRemoved.package
-})  | ${(parseInt(sizeRemoved.gzip) / 1024).toFixed(1)}kB         | ${(
-  sizeRemoved.size / 1024
-).toFixed(1)}kB         | ${
-  packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
-}
-` : ''
-const gzipedDiff = sizeRemoved ? (((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))).toFixed(1) : 0; 
-const sizeDiff = sizeRemoved ? (((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))).toFixed(1) : 0; 
-
-table += sizeRemoved ? `| | | ${Math.sign(gzipedDiff) &&  gzipedDiff !== '0.0' ? '+' : ''}${gzipedDiff !== '0.0' ? gzipedDiff + 'kB' : ''}         | ${Math.sign(sizeDiff) && sizeDiff !== '0.0' ? '+' : ''}${sizeDiff !== '0.0' ? sizeDiff + 'kB' : ''}        | ` : ''
-
+    table += sizeRemoved ? `| | | ${Math.sign(gzipedDiff) &&  gzipedDiff !== '0.0' ? '+' : ''}${gzipedDiff !== '0.0' ? gzipedDiff + 'kB' : ''}         | ${Math.sign(sizeDiff) && sizeDiff !== '0.0' ? '+' : ''}${sizeDiff !== '0.0' ? sizeDiff + 'kB' : ''}        | ` : ''
+  } else {
+    table += `| [${packageInfo.name}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${(parseInt(packageInfo.gzip) / 1024).toFixed(1)}kB         | ${(packageInfo.size / 1024).toFixed(1)}kB         | ${packageInfo.gzip > core.getInput('threshold') ? '❌' : '✅'}
+    `;
+  }
   });
+
 
   return table;
 };
