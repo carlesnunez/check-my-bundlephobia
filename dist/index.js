@@ -5408,6 +5408,7 @@ module.exports.Collection = Hook.Collection
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 const core = __webpack_require__(470);
+const fetch = __webpack_require__(454);
 
 exports.getMarkDownTable = (report) => {
     let table = `
@@ -5458,6 +5459,12 @@ exports.getMarkDownTable = (report) => {
         return `${pkname}@${versionParsed}`
     });
   }
+
+exports.getDevDependencies = async () => {
+  const result = await fetch(`https://raw.githubusercontent.com/${process.env.GITHUB_REPOSITORY}/${process.env.GITHUB_HEAD_REF}/package.json`);
+  const data = await result.json();
+  return data.devDependencies ? Object.keys(data.devDependencies) : [];
+}
 
 /***/ }),
 
@@ -5774,9 +5781,14 @@ const octokit = new Octokit({
 
 exec(
   `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
-  (err, out, e) => {
+  async (err, out, e) => {
     const packageList = utils.getPackageListFromDiff(out);
-    const requests = packageList.map(package => {
+    const devDependenciesList = await utils.getDevDependencies();
+    const requests = packageList.filter(p => {
+      const packageName = p.split('@')[0];
+      return !(core.getInput('ignore-dev-dependencies') === 'true' && devDependenciesList.includes(packageName));
+    })
+    .map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",
