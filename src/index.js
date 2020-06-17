@@ -10,9 +10,15 @@ const octokit = new Octokit({
 
 exec(
   `git diff refs/remotes/origin/${process.env.GITHUB_BASE_REF} refs/remotes/origin/${process.env.GITHUB_HEAD_REF} package.json`,
-  (err, out, e) => {
+  // (err, out, e) => {
+  async (err, out, e) => {
     const {packagesAdded, packagesRemoved} = utils.getPackageListFromDiff(out);
-    const requestsAdded = packagesAdded.map(package => {
+    const devDependenciesList = await utils.getDevDependencies();
+    const requestsAdded = packagesAdded.filter(p => {
+      const packageName = p.split('@')[0];
+      return !(core.getInput('ignore-dev-dependencies') === 'true' && devDependenciesList.includes(packageName));
+    })
+    .map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",
@@ -32,7 +38,10 @@ exec(
       
       r.catch(e => console.log('->',e))
     });
-    const requestsRemoved = packagesRemoved.filter(name => packagesAdded.find(n => n.includes(name.split("@")[0]))).map(package => {
+    const requestsRemoved = packagesRemoved.filter(p => {
+      const packageName = p.split('@')[0];
+      return !(core.getInput('ignore-dev-dependencies') === 'true' && devDependenciesList.includes(packageName));
+    }).filter(name => packagesAdded.find(n => n.includes(name.split("@")[0]))).map(package => {
       const r = fetch(`https://bundlephobia.com/api/size?package=${package}`, {
         headers: {
           "User-Agent": "bundle-phobia-cli",
@@ -52,8 +61,6 @@ exec(
       
       r.catch(e => console.log('->',e))
     });
-    console.log(requestsRemoved);
-    console.log(packagesAdded);
       Promise.all([Promise.all(requestsAdded), Promise.all(requestsRemoved)]).then(([sizesAdded, sizesRemoved]) => {
         console.log('sizes', sizesAdded, sizesRemoved)
         if (

@@ -28,6 +28,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           strict: true
           threshold: 500
+          ignore-dev-dependencies: true
 ```
 
 ## Options
@@ -37,4 +38,5 @@ jobs:
 | repo-token | used by the action in order to perform PR reviews  | true     |         |         |
 | strict     | If true will reject the PR if threshold is exceded | false    | Boolean | false   |
 | threshold  | Max package size in bytes                          | false    | String  | 500     |
+| ignore-dev-dependencies | Ignore devDependencies so that to not be checked | false    | Boolean  | false     |
 
