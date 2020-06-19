@@ -5427,6 +5427,7 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
 `;
   sizesAdded.forEach((packageInfo, index) => {
     const sizeRemoved = sizesRemoved.find(({name, package}) => name === packageInfo.name);
+    console.log(packageInfo.name)
     sizeRemoved && console.log(sizeRemoved.package, packageInfo.package)
     if(!sizeRemoved || (sizeRemoved.package !== packageInfo.package)) {
       const gzipSize = (parseInt(packageInfo.gzip) / 1024).toFixed(1);
@@ -5903,7 +5904,6 @@ exec(
       r.catch(e => console.log('->',e))
     });
       Promise.all([Promise.all(requestsAdded), Promise.all(requestsRemoved)]).then(([sizesAdded, sizesRemoved]) => {
-        console.log('sizes', sizesAdded, sizesRemoved)
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
           process.env.GITHUB_REPOSITORY.split("/") && sizesAdded.length

@@ -62,7 +62,6 @@ exec(
       r.catch(e => console.log('->',e))
     });
       Promise.all([Promise.all(requestsAdded), Promise.all(requestsRemoved)]).then(([sizesAdded, sizesRemoved]) => {
-        console.log('sizes', sizesAdded, sizesRemoved)
         if (
           process.env.GITHUB_REF.split("refs/pull/") &&
           process.env.GITHUB_REPOSITORY.split("/") && sizesAdded.length
