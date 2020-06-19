@@ -16,6 +16,7 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
 |  | name | gzip | size | pass
 | -- | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
+console.log('borradas', sizesRemoved)
   sizesAdded.forEach((packageInfo, index) => {
     const sizeRemoved = sizesRemoved.find(({name, package}) => name === packageInfo.name);
     console.log(packageInfo.name)
