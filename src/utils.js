@@ -18,7 +18,7 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
 `;
   sizesAdded.forEach((packageInfo, index) => {
     const sizeRemoved = sizesRemoved.find(({name, package}) => name === packageInfo.name);
-    console.log(sizeRemoved.package, packageInfo.package)
+    sizeRemoved && console.log(sizeRemoved.package, packageInfo.package)
     if(!sizeRemoved || (sizeRemoved.package !== packageInfo.package)) {
       const gzipSize = (parseInt(packageInfo.gzip) / 1024).toFixed(1);
       const rawSize = (packageInfo.size / 1024).toFixed(1);
