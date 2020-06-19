@@ -5487,7 +5487,6 @@ exports.getPackageListFromDiff = (diff) => {
   });
 
   const packagesRemoved = stuffRemoved.filter((name) => {
-    name = name.replace(",", "");
     const initIsQuote = name[0] === "-";
     const endIsQuote =
       name[name.length - 1] === '"' || name[name.length - 1] === "'";
@@ -5518,7 +5517,7 @@ exports.getPackageListFromDiff = (diff) => {
       return `${pkname}@${versionParsed}`;
     }),
     packagesRemoved: packagesRemoved.map((name) => {
-      const noSpaces = name.split(" ").join("").split("-").join();
+      const noSpaces = name.split(" ").join("").split("- ").join();
       const noBreaks = noSpaces.split("\n").join("");
       const noQuotes = noBreaks.split('"').join("").split("'").join("");
       const noCommas = noQuotes.split(",").join("");
