@@ -5425,16 +5425,14 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
 |  | name | gzip | size | pass
 | -- | ----------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
 `;
-console.log('borradas', sizesRemoved)
   sizesAdded.forEach((packageInfo, index) => {
     const sizeRemoved = sizesRemoved.find(({name, package}) => name === packageInfo.name);
-    console.log(packageInfo.name)
     sizeRemoved && console.log(sizeRemoved.package, packageInfo.package)
     if(!sizeRemoved || (sizeRemoved.package !== packageInfo.package)) {
       const gzipSize = (parseInt(packageInfo.gzip) / 1024).toFixed(1);
       const rawSize = (packageInfo.size / 1024).toFixed(1);
       const isBlockedMessage = packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅";
-      const isNew = sizeRemoved ? 'New' : '';
+      const isNew = sizeRemoved ? '🆕' : '';
       table += `| ${isNew} | [${packageInfo.package}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${gzipSize}kB         | ${rawSize}kB         | ${isBlockedMessage}
 `;
 
@@ -5448,7 +5446,7 @@ console.log('borradas', sizesRemoved)
       const gzipedDiff = (((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))).toFixed(1);
       const sizeDiff = (((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))).toFixed(1);
     
-      table += `| | | ${Math.sign(gzipedDiff) &&  gzipedDiff !== '0.0' ? '+' : ''}${gzipedDiff !== '0.0' ? gzipedDiff + 'kB' : ''}         | ${Math.sign(sizeDiff) && sizeDiff !== '0.0' ? '+' : ''}${sizeDiff !== '0.0' ? sizeDiff + 'kB' : ''}        | `;
+      table += `| | | ${Math.sign(gzipedDiff) &&  gzipedDiff !== '0.0' ? '↑ +' : '↓ '}${gzipedDiff !== '0.0' ? gzipedDiff + 'kB' : ''}         | ${Math.sign(sizeDiff) && sizeDiff !== '0.0' ? '↑ +' : '↓ '}${sizeDiff !== '0.0' ? sizeDiff + 'kB' : ''}        | `;
     
     }
   }
@@ -5525,7 +5523,6 @@ exports.getPackageListFromDiff = (diff) => {
       const versionSeparator = noBrackets.split(":");
       const [pkname, version] = versionSeparator;
       const [dash, ...pknameWithoutDash] = pkname;
-      console.log(pknameWithoutDash)
       const versionParsed = isNaN(version[0]) ? version.substr(1) : version;
       return `${pknameWithoutDash.join("")}@${versionParsed}`;
     }),
