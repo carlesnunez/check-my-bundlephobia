@@ -116,7 +116,7 @@ exports.getPackageListFromDiff = (diff) => {
       const versionSeparator = noBrackets.split(":");
       const [pkname, version] = versionSeparator;
       const [dash, ...pknameWithoutDash] = pkname;
-      console.log(pkname)
+      console.log(pknameWithoutDash)
       const versionParsed = isNaN(version[0]) ? version.substr(1) : version;
       return `${pknameWithoutDash.join()}@${versionParsed}`;
     }),
