@@ -5409,6 +5409,7 @@ module.exports.Collection = Hook.Collection
 
 const core = __webpack_require__(470);
 const fetch = __webpack_require__(454);
+const { promises: fs } = __webpack_require__(747)
 
 exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
   let table = `
@@ -5531,9 +5532,9 @@ exports.getPackageListFromDiff = (diff) => {
 
 
 exports.getDevDependencies = async () => {
-  const result = await fetch(`https://raw.githubusercontent.com/${process.env.GITHUB_REPOSITORY}/${process.env.GITHUB_HEAD_REF}/package.json`);
-  const data = await result.json();
-  return data.devDependencies ? Object.keys(data.devDependencies) : [];
+  const result = await fs.readFile('./package.json', 'utf8');
+  const packageJSON = JSON.parse(result);
+  return packageJSON.devDependencies ? Object.keys(packageJSON.devDependencies) : [];
 }
 
 
@@ -5855,7 +5856,7 @@ exec(
   // (err, out, e) => {
   async (err, out, e) => {
     const {packagesAdded, packagesRemoved} = utils.getPackageListFromDiff(out);
-    const devDependenciesList = await utils.getDevDependencies();
+    const devDependenciesList = utils.getDevDependencies();
     const requestsAdded = packagesAdded.filter(p => {
       const packageName = p.split('@')[0];
       return !(core.getInput('ignore-dev-dependencies') === 'true' && devDependenciesList.includes(packageName));
