@@ -28,17 +28,18 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
       table += `| ${isNew} | [${packageInfo.package}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${gzipSize}kB         | ${rawSize}kB         | ${isBlockedMessage}
 `;
 
-    if(sizeRemoved && packageInfo.size) {
+    if(sizeRemoved) {
       const removedGzipSize = (parseInt(sizeRemoved.gzip) / 1024).toFixed(1);
       const removedRawSize = (sizeRemoved.size / 1024).toFixed(1)
       const removedIsBlockedMessage = packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
-      table += `| − | [${sizeRemoved.package}](https://bundlephobia.com/result?p=${sizeRemoved.package})  | ${removedGzipSize}kB         | ${removedRawSize}kB         | ${removedIsBlockedMessage}
+      table += `| − | [${sizeRemoved.package}](https://bundlephobia.com/result?p=${sizeRemoved.package})  | ${removedGzipSize}kB         | ${removedRawSize}kB         |  
 `;
       
       const gzipedDiff = (((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))).toFixed(1);
       const sizeDiff = (((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))).toFixed(1);
     
-      table += `| | | ${gzipedDiff !== '0.0' ? gzipedDiff + 'kB' : ''}         | ${sizeDiff !== '0.0' ? sizeDiff + 'kB' : ''}        | `;
+      table += `| | | ${gzipedDiff !== '0.0' ? gzipedDiff + 'kB' : ''}         | ${sizeDiff !== '0.0' ? sizeDiff + 'kB' : ''}        |
+`;
     
     }
   }
