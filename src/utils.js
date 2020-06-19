@@ -28,7 +28,7 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
       table += `| ${isNew} | [${packageInfo.package}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${gzipSize}kB         | ${rawSize}kB         | ${isBlockedMessage}
 `;
 
-    if(sizeRemoved) {
+    if(sizeRemoved && packageInfo.size) {
       const removedGzipSize = (parseInt(sizeRemoved.gzip) / 1024).toFixed(1);
       const removedRawSize = (sizeRemoved.size / 1024).toFixed(1)
       const removedIsBlockedMessage = packageInfo.gzip > core.getInput("threshold") ? "❌" : "✅"
@@ -38,7 +38,7 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
       const gzipedDiff = (((parseInt(packageInfo.gzip) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.gzip) / 1024).toFixed(1))).toFixed(1);
       const sizeDiff = (((parseInt(packageInfo.size) / 1024).toFixed(1)) - ((parseInt(sizeRemoved.size) / 1024).toFixed(1))).toFixed(1);
     
-      table += `| | | ${Math.sign(gzipedDiff) &&  gzipedDiff !== '0.0' ? '+' : ''}${gzipedDiff !== '0.0' ? gzipedDiff + 'kB' : ''}         | ${Math.sign(sizeDiff) && sizeDiff !== '0.0' ? '+' : ''}${sizeDiff !== '0.0' ? sizeDiff + 'kB' : ''}        | `;
+      table += `| | | ${gzipedDiff !== '0.0' ? gzipedDiff + 'kB' : ''}         | ${sizeDiff !== '0.0' ? sizeDiff + 'kB' : ''}        | `;
     
     }
   }
