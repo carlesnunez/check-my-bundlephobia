@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: carlesnunez/check-my-bundlephobia@v1.2.0
+      - uses: carlesnunez/check-my-bundlephobia@v1.4.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           strict: true
