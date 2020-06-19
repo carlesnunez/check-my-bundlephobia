@@ -24,7 +24,7 @@ exports.getMarkDownTable = (sizesAdded, sizesRemoved) => {
     const isNew = sizeRemoved ? 'New' : '';
     table += `| ${isNew} | [${packageInfo.package}](https://bundlephobia.com/result?p=${packageInfo.package})  | ${gzipSize}kB         | ${rawSize}kB         | ${isBlockedMessage}
 `;
-
+console.log(sizeRemoved)
   if(sizeRemoved) {
     const removedGzipSize = (parseInt(sizeRemoved.gzip) / 1024).toFixed(1);
     const removedRawSize = (sizeRemoved.size / 1024).toFixed(1)
