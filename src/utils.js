@@ -78,9 +78,10 @@ exports.getPackageListFromDiff = (diff) => {
   });
 
   const packagesRemoved = stuffRemoved.filter((name) => {
+    name = name.replace(",", "");
     const initIsQuote = name[0] === "-";
     const endIsQuote =
-      name[name.length - 1] === '"' || name[name.length - 1] === "'" || name[name.length - 1] === ",";
+      name[name.length - 1] === '"' || name[name.length - 1] === "'";
     const colonIndex = name.indexOf(":");
     const quoteBeforeColon =
       name[colonIndex - 1] === '"' || name[colonIndex] === "'";
