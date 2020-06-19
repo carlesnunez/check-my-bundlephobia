@@ -5517,15 +5517,16 @@ exports.getPackageListFromDiff = (diff) => {
       return `${pkname}@${versionParsed}`;
     }),
     packagesRemoved: packagesRemoved.map((name) => {
-      const noSpaces = name.split(" ").join("").split("- ").join();
+      const noSpaces = name.split(" ").join("").join();
       const noBreaks = noSpaces.split("\n").join("");
       const noQuotes = noBreaks.split('"').join("").split("'").join("");
       const noCommas = noQuotes.split(",").join("");
       const noBrackets = noCommas.split("}").join("").split("{").join("");
       const versionSeparator = noBrackets.split(":");
       const [pkname, version] = versionSeparator;
+      const [dash, ...pknameWithoutDash] = pkname;
       const versionParsed = isNaN(version[0]) ? version.substr(1) : version;
-      return `${pkname}@${versionParsed}`;
+      return `${pknameWithoutDash.join()}@${versionParsed}`;
     }),
   };
 };
