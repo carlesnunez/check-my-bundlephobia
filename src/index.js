@@ -13,7 +13,7 @@ exec(
   // (err, out, e) => {
   async (err, out, e) => {
     const {packagesAdded, packagesRemoved} = utils.getPackageListFromDiff(out);
-    const devDependenciesList = utils.getDevDependencies();
+    const devDependenciesList = await utils.getDevDependencies();
     const requestsAdded = packagesAdded.filter(p => {
       const packageName = p.split('@')[0];
       return !(core.getInput('ignore-dev-dependencies') === 'true' && devDependenciesList.includes(packageName));
